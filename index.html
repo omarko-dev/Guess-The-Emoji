@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Word from Emojis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="main-menu">
+        <img src="logo.png" alt="Game Logo" id="logo">
+        <div id="button-container">
+            <button id="start-button">Start Game</button>
+            <button id="instructions-button">Instructions</button>
+        </div>
+    </div>
+    <div id="game-container" style="display: none;">
+        <div id="timer-bar"></div>
+        <div id="level">🔥 Streak <span id="current-level">1</span></div>
+        <div id="emoji-container">
+            <span id="emoji1">🍎</span> + <span id="emoji2">📚</span> = ??
+        </div>
+        <div id="choices">
+            <button class="choice">Apple Pie</button>
+            <button class="choice">Bookworm</button>
+            <button class="choice">Fruit Salad</button>
+            <button class="choice">Library</button>
+        </div>
+        <div id="game-over" style="display: none;">
+            <p>Game Over!</p>
+            <button id="restart-button">Restart</button>
+        </div>
+    </div>
+    <div id="instructions" style="display: none;">
+        <h2>Instructions</h2>
+        <p>Guess the word from the emojis shown. Select the correct answer from the options provided.</p>
+        <button id="back-button">Back to Menu</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
