@@ -22,29 +22,64 @@ const levels = [
     { emojis: ['🚿', '🛁'], answer: 'Bath Time', choices: ['Shower', 'Clean', 'Bath Time', 'Relax'] },
 ];
 
+const movieLevels = [
+    { emojis: ['🦁', '👑'], answer: 'The Lion King', choices: ['The Lion King', 'Lion Heart', 'King of the Jungle', 'Animal Kingdom'] },
+    { emojis: ['🚢', '❄️'], answer: 'Titanic', choices: ['Titanic', 'Frozen Ship', 'Iceberg', 'Sinking Ship'] },
+    { emojis: ['🧙‍♂️', '🧝‍♂️'], answer: 'The Lord of the Rings', choices: ['The Lord of the Rings', 'Wizard and Elf', 'Magic Ring', 'Fantasy World'] },
+    { emojis: ['🦸‍♂️', '🦸‍♀️'], answer: 'The Avengers', choices: ['The Avengers', 'Superheroes', 'Marvel Team', 'Hero Squad'] },
+    { emojis: ['🦇', '🦸‍♂️'], answer: 'Batman', choices: ['Batman', 'Dark Knight', 'Gotham Hero', 'Bat Hero'] },
+    { emojis: ['👽', '🚀'], answer: 'E.T.', choices: ['E.T.', 'Alien Visitor', 'Space Friend', 'Extraterrestrial'] },
+    { emojis: ['🧛‍♂️', '🦇'], answer: 'Dracula', choices: ['Dracula', 'Vampire', 'Bloodsucker', 'Night Creature'] },
+    { emojis: ['👸', '🐸'], answer: 'The Princess and the Frog', choices: ['The Princess and the Frog', 'Fairy Tale', 'Frog Prince', 'Royal Kiss'] },
+    { emojis: ['🧞‍♂️', '🕌'], answer: 'Aladdin', choices: ['Aladdin', 'Magic Lamp', 'Genie', 'Arabian Nights'] },
+    { emojis: ['🦁', '🐯'], answer: 'Madagascar', choices: ['Madagascar', 'Zoo Escape', 'Animal Adventure', 'Wild Journey'] },
+    { emojis: ['🧙‍♂️', '⚡'], answer: 'Harry Potter', choices: ['Harry Potter', 'Wizard Boy', 'Magic School', 'Sorcerer'] },
+    { emojis: ['👻', '🏚️'], answer: 'Ghostbusters', choices: ['Ghostbusters', 'Haunted House', 'Spooky Mansion', 'Ghost Hunters'] },
+    { emojis: ['🦸‍♂️', '🕷️'], answer: 'Spider-Man', choices: ['Spider-Man', 'Web Slinger', 'Spider Hero', 'Wall Crawler'] },
+    { emojis: ['🧟‍♂️', '🔫'], answer: 'Zombieland', choices: ['Zombieland', 'Zombie Apocalypse', 'Undead World', 'Survival'] },
+    { emojis: ['👨‍🚀', '🌕'], answer: 'Apollo 13', choices: ['Apollo 13', 'Moon Mission', 'Space Journey', 'Lunar Landing'] },
+    { emojis: ['🦖', '🌋'], answer: 'Jurassic Park', choices: ['Jurassic Park', 'Dinosaur World', 'Prehistoric Adventure', 'Dino Land'] },
+    { emojis: ['👨‍🎤', '🚀'], answer: 'Rocketman', choices: ['Rocketman', 'Space Singer', 'Music Journey', 'Elton John'] },
+    { emojis: ['🧙‍♂️', '🧙‍♀️'], answer: 'Fantastic Beasts', choices: ['Fantastic Beasts', 'Magic Creatures', 'Wizard World', 'Magical Adventure'] },
+    { emojis: ['👨‍🚀', '🌌'], answer: 'Interstellar', choices: ['Interstellar', 'Space Travel', 'Cosmic Journey', 'Galaxy Quest'] },
+];
+
 let currentLevel = 0;
 let timeLeft = 10;
+let countdown;
 const timerBar = document.getElementById('timer-bar');
+const timerBarMovies = document.getElementById('timer-bar-movies');
 const levelElement = document.getElementById('level');
+const levelElementMovies = document.getElementById('level-movies');
 const emoji1 = document.getElementById('emoji1');
 const emoji2 = document.getElementById('emoji2');
+const emoji1Movies = document.getElementById('emoji1-movies');
+const emoji2Movies = document.getElementById('emoji2-movies');
 const choicesContainer = document.getElementById('choices');
+const movieAnswerInput = document.getElementById('movie-answer-input');
+const submitMovieAnswerButton = document.getElementById('submit-movie-answer');
+const choicesContainerMovies = document.getElementById('choices-movies');
 const gameOverElement = document.getElementById('game-over');
+const gameOverElementMovies = document.getElementById('game-over-movies');
 const restartButton = document.getElementById('restart-button');
+const restartButtonMovies = document.getElementById('restart-button-movies');
 const mainMenu = document.getElementById('main-menu');
 const gameContainer = document.getElementById('game-container');
 const instructions = document.getElementById('instructions');
+const moviesContainer = document.getElementById('movies-container');
 const startButton = document.getElementById('start-button');
 const instructionsButton = document.getElementById('instructions-button');
+const moviesButton = document.getElementById('movies-button');
 const backButton = document.getElementById('back-button');
+const backButtonGame = document.getElementById('back-button-game');
+const backButtonMovies = document.getElementById('back-button-movies');
 let usedLevels = [];
-let countdown;
 
 startButton.addEventListener('click', () => {
     mainMenu.style.display = 'none';
     gameContainer.style.display = 'flex';
     loadLevel(currentLevel);
-    startTimer();
+    resetTimer(timerBar, 10); // Set initial time for main game
 });
 
 instructionsButton.addEventListener('click', () => {
@@ -52,15 +87,36 @@ instructionsButton.addEventListener('click', () => {
     instructions.style.display = 'flex';
 });
 
+moviesButton.addEventListener('click', () => {
+    mainMenu.style.display = 'none';
+    moviesContainer.style.display = 'flex';
+    loadMovieLevel(currentLevel);
+    resetTimer(timerBarMovies, 20); // Set initial time for movie game
+});
+
 backButton.addEventListener('click', () => {
     instructions.style.display = 'none';
     mainMenu.style.display = 'flex';
 });
 
+backButtonGame.addEventListener('click', () => {
+    gameContainer.style.display = 'none';
+    mainMenu.style.display = 'flex';
+});
+
+backButtonMovies.addEventListener('click', () => {
+    moviesContainer.style.display = 'none';
+    mainMenu.style.display = 'flex';
+});
+
+restartButton.addEventListener('click', restartGame);
+restartButtonMovies.addEventListener('click', restartMovieGame);
+submitMovieAnswerButton.addEventListener('click', checkMovieAnswer);
+
 function loadLevel(level) {
     let randomLevel;
     do {
-        randomLevel = getRandomLevel();
+        randomLevel = getRandomLevel(levels);
     } while (usedLevels.includes(randomLevel));
     usedLevels.push(randomLevel);
 
@@ -73,64 +129,122 @@ function loadLevel(level) {
         const button = document.createElement('button');
         button.className = 'choice';
         button.textContent = choice;
-        button.addEventListener('click', () => checkAnswer(choice, randomLevel));
+        button.addEventListener('click', () => checkAnswer(choice, randomLevel, levels));
         choicesContainer.appendChild(button);
     });
 }
 
-function checkAnswer(choice, level) {
-    if (choice === levels[level].answer) {
-        startEmojiRain(levels[level].emojis);
+function loadMovieLevel(level) {
+    let randomLevel;
+    do {
+        randomLevel = getRandomLevel(movieLevels);
+    } while (usedLevels.includes(randomLevel));
+    usedLevels.push(randomLevel);
+
+    const { emojis } = movieLevels[randomLevel];
+    emoji1Movies.textContent = emojis[0];
+    emoji2Movies.textContent = emojis[1];
+    levelElementMovies.innerHTML = `Streak 🔥 : ${level + 1}`;
+    movieAnswerInput.value = '';
+}
+
+function checkAnswer(choice, level, levelsArray) {
+    if (choice === levelsArray[level].answer) {
+        startEmojiRain(levelsArray[level].emojis);
         setTimeout(() => {
             stopEmojiRain();
             currentLevel++;
-            if (currentLevel < levels.length) {
-                loadLevel(currentLevel);
-                resetTimer();
+            if (currentLevel < levelsArray.length) {
+                if (levelsArray === levels) {
+                    loadLevel(currentLevel);
+                    resetTimer(timerBar, 10); // Reset time for main game
+                } else {
+                    loadMovieLevel(currentLevel);
+                    resetTimer(timerBarMovies, 20); // Reset time for movie game
+                }
             } else {
                 alert('Congratulations! You completed all levels.');
             }
-        }, 2000);
+        }, 2000); // Delay to show the emoji rain
     } else {
-        gameOver();
+        gameOver(levelsArray);
     }
 }
 
-function getRandomLevel() {
-    return Math.floor(Math.random() * levels.length);
+function checkMovieAnswer() {
+    const currentMovieLevel = movieLevels[currentLevel];
+    if (movieAnswerInput.value.toLowerCase() === currentMovieLevel.answer.toLowerCase()) {
+        startEmojiRain(currentMovieLevel.emojis);
+        setTimeout(() => {
+            stopEmojiRain();
+            currentLevel++;
+            if (currentLevel < movieLevels.length) {
+                loadMovieLevel(currentLevel);
+                resetTimer(timerBarMovies, 20); // Reset time for movie game
+            } else {
+                alert('Congratulations! You completed all levels.');
+            }
+        }, 2000); // Delay to show the emoji rain
+    } else {
+        gameOver(movieLevels);
+    }
 }
 
-function resetTimer() {
+function getRandomLevel(levelsArray) {
+    return Math.floor(Math.random() * levelsArray.length);
+}
+
+function resetTimer(timerElement, initialTime) {
     clearInterval(countdown);
-    timeLeft = 10;
-    timerBar.style.width = '100%';
-    startTimer();
+    timeLeft = initialTime;
+    timerElement.style.transition = 'none'; // Disable transition
+    timerElement.style.width = '100%'; // Set width to 100%
+    timerElement.offsetWidth; // Trigger reflow
+    timerElement.style.transition = `width ${initialTime}s linear`; // Re-enable transition with correct duration
+    timerElement.style.width = '0%'; // Start the timer
+    startTimer(timerElement);
 }
 
-function startTimer() {
+function startTimer(timerElement) {
     countdown = setInterval(() => {
         if (timeLeft <= 0) {
             clearInterval(countdown);
-            gameOver();
+            gameOver(timerElement === timerBar ? levels : movieLevels);
         } else {
             timeLeft--;
-            timerBar.style.width = (timeLeft * 10) + '%';
+            timerElement.style.width = (timeLeft / initialTime) * 100 + '%';
         }
     }, 1000);
 }
 
-function gameOver() {
-    choicesContainer.style.display = 'none';
-    gameOverElement.style.display = 'flex';
+function gameOver(levelsArray) {
+    if (levelsArray === levels) {
+        choicesContainer.style.display = 'none';
+        gameOverElement.style.display = 'flex';
+    } else {
+        movieAnswerInput.style.display = 'none';
+        submitMovieAnswerButton.style.display = 'none';
+        gameOverElementMovies.style.display = 'flex';
+    }
 }
 
 function restartGame() {
-    currentLevel = 0;
-    usedLevels = [];
+    currentLevel = 0; // Restart from the first level
+    usedLevels = []; // Reset used levels
     loadLevel(currentLevel);
-    resetTimer();
+    resetTimer(timerBar, 10); // Reset time for main game
     choicesContainer.style.display = 'flex';
     gameOverElement.style.display = 'none';
+}
+
+function restartMovieGame() {
+    currentLevel = 0; // Restart from the first level
+    usedLevels = []; // Reset used levels
+    loadMovieLevel(currentLevel);
+    resetTimer(timerBarMovies, 20); // Reset time for movie game
+    movieAnswerInput.style.display = 'block';
+    submitMovieAnswerButton.style.display = 'block';
+    gameOverElementMovies.style.display = 'none';
 }
 
 function startEmojiRain(emojis) {
@@ -155,5 +269,3 @@ function stopEmojiRain() {
         document.body.removeChild(rainContainer);
     }
 }
-
-restartButton.addEventListener('click', restartGame);
