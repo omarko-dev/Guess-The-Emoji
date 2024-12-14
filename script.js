@@ -79,7 +79,7 @@ startButton.addEventListener('click', () => {
     mainMenu.style.display = 'none';
     gameContainer.style.display = 'flex';
     loadLevel(currentLevel);
-    resetTimer(timerBar, 10); // Set initial time for main game
+    resetTimer(timerBar, 10);
 });
 
 instructionsButton.addEventListener('click', () => {
@@ -91,7 +91,7 @@ moviesButton.addEventListener('click', () => {
     mainMenu.style.display = 'none';
     moviesContainer.style.display = 'flex';
     loadMovieLevel(currentLevel);
-    resetTimer(timerBarMovies, 20); // Set initial time for movie game
+    resetTimer(timerBarMovies, 20);
 });
 
 backButton.addEventListener('click', () => {
@@ -157,15 +157,15 @@ function checkAnswer(choice, level, levelsArray) {
             if (currentLevel < levelsArray.length) {
                 if (levelsArray === levels) {
                     loadLevel(currentLevel);
-                    resetTimer(timerBar, 10); // Reset time for main game
+                    resetTimer(timerBar, 10);
                 } else {
                     loadMovieLevel(currentLevel);
-                    resetTimer(timerBarMovies, 20); // Reset time for movie game
+                    resetTimer(timerBarMovies, 20);
                 }
             } else {
                 alert('Congratulations! You completed all levels.');
             }
-        }, 2000); // Delay to show the emoji rain
+        }, 2000);
     } else {
         gameOver(levelsArray);
     }
@@ -180,11 +180,11 @@ function checkMovieAnswer() {
             currentLevel++;
             if (currentLevel < movieLevels.length) {
                 loadMovieLevel(currentLevel);
-                resetTimer(timerBarMovies, 20); // Reset time for movie game
+                resetTimer(timerBarMovies, 20);
             } else {
                 alert('Congratulations! You completed all levels.');
             }
-        }, 2000); // Delay to show the emoji rain
+        }, 2000);
     } else {
         gameOver(movieLevels);
     }
@@ -197,11 +197,11 @@ function getRandomLevel(levelsArray) {
 function resetTimer(timerElement, initialTime) {
     clearInterval(countdown);
     timeLeft = initialTime;
-    timerElement.style.transition = 'none'; // Disable transition
-    timerElement.style.width = '100%'; // Set width to 100%
-    timerElement.offsetWidth; // Trigger reflow
-    timerElement.style.transition = `width ${initialTime}s linear`; // Re-enable transition with correct duration
-    timerElement.style.width = '0%'; // Start the timer
+    timerElement.style.transition = 'none';
+    timerElement.style.width = '100%';
+    timerElement.offsetWidth;
+    timerElement.style.transition = `width ${initialTime}s linear`;
+    timerElement.style.width = '0%';
     startTimer(timerElement);
 }
 
@@ -229,19 +229,19 @@ function gameOver(levelsArray) {
 }
 
 function restartGame() {
-    currentLevel = 0; // Restart from the first level
-    usedLevels = []; // Reset used levels
+    currentLevel = 0;
+    usedLevels = [];
     loadLevel(currentLevel);
-    resetTimer(timerBar, 10); // Reset time for main game
+    resetTimer(timerBar, 10);
     choicesContainer.style.display = 'flex';
     gameOverElement.style.display = 'none';
 }
 
 function restartMovieGame() {
-    currentLevel = 0; // Restart from the first level
-    usedLevels = []; // Reset used levels
+    currentLevel = 0;
+    usedLevels = [];
     loadMovieLevel(currentLevel);
-    resetTimer(timerBarMovies, 20); // Reset time for movie game
+    resetTimer(timerBarMovies, 20);
     movieAnswerInput.style.display = 'block';
     submitMovieAnswerButton.style.display = 'block';
     gameOverElementMovies.style.display = 'none';
