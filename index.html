@@ -12,6 +12,7 @@
         <div id="button-container">
             <button id="start-button">Start Game</button>
             <button id="instructions-button">Instructions</button>
+            <button id="movies-button">Movies</button>
         </div>
     </div>
     <div id="game-container" style="display: none;">
@@ -30,11 +31,26 @@
             <p>Game Over!</p>
             <button id="restart-button">Restart</button>
         </div>
+        <button id="back-button-game">Back to Menu</button>
     </div>
     <div id="instructions" style="display: none;">
         <h2>Instructions</h2>
         <p>Guess the word from the emojis shown. Select the correct answer from the options provided.</p>
         <button id="back-button">Back to Menu</button>
+    </div>
+    <div id="movies-container" style="display: none;">
+        <div id="timer-bar-movies"></div>
+        <div id="level-movies">🔥 Streak <span id="current-level-movies">1</span></div>
+        <div id="emoji-container-movies">
+            <span id="emoji1-movies">🦁</span> + <span id="emoji2-movies">👑</span> = ??
+        </div>
+        <input type="text" id="movie-answer-input" placeholder="Type your answer here...">
+        <button id="submit-movie-answer">Submit</button>
+        <div id="game-over-movies" style="display: none;">
+            <p>Game Over!</p>
+            <button id="restart-button-movies">Restart</button>
+        </div>
+        <button id="back-button-movies">Back to Menu</button>
     </div>
     <script src="script.js"></script>
 </body>
