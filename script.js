@@ -44,34 +44,40 @@ const movieLevels = [
     { emojis: ['👨‍🚀', '🌌'], answer: 'Interstellar', choices: ['Interstellar', 'Space Travel', 'Cosmic Journey', 'Galaxy Quest'] },
 ];
 
+let flagLevels = [];
 let currentLevel = 0;
 let timeLeft = 10;
 let countdown;
 const timerBar = document.getElementById('timer-bar');
+const timerBarFlags = document.getElementById('timer-bar-flags');
 const timerBarMovies = document.getElementById('timer-bar-movies');
 const levelElement = document.getElementById('level');
+const levelElementFlags = document.getElementById('level-flags');
 const levelElementMovies = document.getElementById('level-movies');
 const emoji1 = document.getElementById('emoji1');
 const emoji2 = document.getElementById('emoji2');
 const emoji1Movies = document.getElementById('emoji1-movies');
 const emoji2Movies = document.getElementById('emoji2-movies');
+const flagImage = document.getElementById('flag-image');
 const choicesContainer = document.getElementById('choices');
+const choicesContainerFlags = document.getElementById('choices-flags');
 const movieAnswerInput = document.getElementById('movie-answer-input');
 const submitMovieAnswerButton = document.getElementById('submit-movie-answer');
-const choicesContainerMovies = document.getElementById('choices-movies');
 const gameOverElement = document.getElementById('game-over');
+const gameOverElementFlags = document.getElementById('game-over-flags');
 const gameOverElementMovies = document.getElementById('game-over-movies');
 const restartButton = document.getElementById('restart-button');
+const restartButtonFlags = document.getElementById('restart-button-flags');
 const restartButtonMovies = document.getElementById('restart-button-movies');
 const mainMenu = document.getElementById('main-menu');
 const gameContainer = document.getElementById('game-container');
-const instructions = document.getElementById('instructions');
+const flagsContainer = document.getElementById('flags-container');
 const moviesContainer = document.getElementById('movies-container');
 const startButton = document.getElementById('start-button');
-const instructionsButton = document.getElementById('instructions-button');
+const flagsButton = document.getElementById('flags-button');
 const moviesButton = document.getElementById('movies-button');
-const backButton = document.getElementById('back-button');
 const backButtonGame = document.getElementById('back-button-game');
+const backButtonFlags = document.getElementById('back-button-flags');
 const backButtonMovies = document.getElementById('back-button-movies');
 let usedLevels = [];
 
@@ -82,9 +88,13 @@ startButton.addEventListener('click', () => {
     resetTimer(timerBar, 10);
 });
 
-instructionsButton.addEventListener('click', () => {
+flagsButton.addEventListener('click', () => {
     mainMenu.style.display = 'none';
-    instructions.style.display = 'flex';
+    flagsContainer.style.display = 'flex';
+    loadFlagLevels().then(() => {
+        loadFlagLevel(currentLevel);
+        resetTimer(timerBarFlags, 10);
+    });
 });
 
 moviesButton.addEventListener('click', () => {
@@ -94,13 +104,13 @@ moviesButton.addEventListener('click', () => {
     resetTimer(timerBarMovies, 20);
 });
 
-backButton.addEventListener('click', () => {
-    instructions.style.display = 'none';
+backButtonGame.addEventListener('click', () => {
+    gameContainer.style.display = 'none';
     mainMenu.style.display = 'flex';
 });
 
-backButtonGame.addEventListener('click', () => {
-    gameContainer.style.display = 'none';
+backButtonFlags.addEventListener('click', () => {
+    flagsContainer.style.display = 'none';
     mainMenu.style.display = 'flex';
 });
 
@@ -110,6 +120,7 @@ backButtonMovies.addEventListener('click', () => {
 });
 
 restartButton.addEventListener('click', restartGame);
+restartButtonFlags.addEventListener('click', restartFlagGame);
 restartButtonMovies.addEventListener('click', restartMovieGame);
 submitMovieAnswerButton.addEventListener('click', checkMovieAnswer);
 
@@ -131,6 +142,36 @@ function loadLevel(level) {
         button.textContent = choice;
         button.addEventListener('click', () => checkAnswer(choice, randomLevel, levels));
         choicesContainer.appendChild(button);
+    });
+}
+
+async function loadFlagLevels() {
+    const response = await fetch('https://restcountries.com/v3.1/all');
+    const countries = await response.json();
+    flagLevels = countries.map(country => ({
+        flag: country.flags.png,
+        answer: country.name.common,
+        choices: shuffle([country.name.common, ...getRandomCountries(countries, 3).map(c => c.name.common)])
+    }));
+}
+
+function loadFlagLevel(level) {
+    let randomLevel;
+    do {
+        randomLevel = getRandomLevel(flagLevels);
+    } while (usedLevels.includes(randomLevel));
+    usedLevels.push(randomLevel);
+
+    const { flag, choices } = flagLevels[randomLevel];
+    flagImage.src = flag;
+    levelElementFlags.innerHTML = `Streak 🔥 : ${level + 1}`;
+    choicesContainerFlags.innerHTML = '';
+    choices.forEach(choice => {
+        const button = document.createElement('button');
+        button.className = 'choice-flag';
+        button.textContent = choice;
+        button.addEventListener('click', () => checkFlagAnswer(choice, randomLevel));
+        choicesContainerFlags.appendChild(button);
     });
 }
 
@@ -158,6 +199,9 @@ function checkAnswer(choice, level, levelsArray) {
                 if (levelsArray === levels) {
                     loadLevel(currentLevel);
                     resetTimer(timerBar, 10);
+                } else if (levelsArray === flagLevels) {
+                    loadFlagLevel(currentLevel);
+                    resetTimer(timerBarFlags, 10);
                 } else {
                     loadMovieLevel(currentLevel);
                     resetTimer(timerBarMovies, 20);
@@ -168,6 +212,20 @@ function checkAnswer(choice, level, levelsArray) {
         }, 2000);
     } else {
         gameOver(levelsArray);
+    }
+}
+
+function checkFlagAnswer(choice, level) {
+    if (choice === flagLevels[level].answer) {
+        currentLevel++;
+        if (currentLevel < flagLevels.length) {
+            loadFlagLevel(currentLevel);
+            resetTimer(timerBarFlags, 10);
+        } else {
+            alert('Congratulations! You completed all levels.');
+        }
+    } else {
+        gameOver(flagLevels);
     }
 }
 
@@ -209,7 +267,7 @@ function startTimer(timerElement) {
     countdown = setInterval(() => {
         if (timeLeft <= 0) {
             clearInterval(countdown);
-            gameOver(timerElement === timerBar ? levels : movieLevels);
+            gameOver(timerElement === timerBar ? levels : timerElement === timerBarFlags ? flagLevels : movieLevels);
         } else {
             timeLeft--;
             timerElement.style.width = (timeLeft / initialTime) * 100 + '%';
@@ -221,6 +279,9 @@ function gameOver(levelsArray) {
     if (levelsArray === levels) {
         choicesContainer.style.display = 'none';
         gameOverElement.style.display = 'flex';
+    } else if (levelsArray === flagLevels) {
+        choicesContainerFlags.style.display = 'none';
+        gameOverElementFlags.style.display = 'flex';
     } else {
         movieAnswerInput.style.display = 'none';
         submitMovieAnswerButton.style.display = 'none';
@@ -235,6 +296,15 @@ function restartGame() {
     resetTimer(timerBar, 10);
     choicesContainer.style.display = 'flex';
     gameOverElement.style.display = 'none';
+}
+
+function restartFlagGame() {
+    currentLevel = 0;
+    usedLevels = [];
+    loadFlagLevel(currentLevel);
+    resetTimer(timerBarFlags, 10);
+    choicesContainerFlags.style.display = 'flex';
+    gameOverElementFlags.style.display = 'none';
 }
 
 function restartMovieGame() {
@@ -268,4 +338,17 @@ function stopEmojiRain() {
     if (rainContainer) {
         document.body.removeChild(rainContainer);
     }
+}
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function getRandomCountries(countries, count) {
+    const shuffled = shuffle(countries.slice());
+    return shuffled.slice(0, count);
 }
