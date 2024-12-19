@@ -10,9 +10,9 @@
     <div id="main-menu">
         <img src="logo.png" alt="Game Logo" id="logo">
         <div id="button-container">
-            <button id="start-button">Start Game</button>
-            <button id="instructions-button">Instructions</button>
-            <button id="movies-button">Movies</button>
+            <button id="start-button">🎮 Words</button>
+            <button id="flags-button">🏳️ Flags</button>
+            <button id="movies-button">🎬 Movies</button>
         </div>
     </div>
     <div id="game-container" style="display: none;">
@@ -21,22 +21,23 @@
         <div id="emoji-container">
             <span id="emoji1">🍎</span> + <span id="emoji2">📚</span> = ??
         </div>
-        <div id="choices">
-            <button class="choice">Apple Pie</button>
-            <button class="choice">Bookworm</button>
-            <button class="choice">Fruit Salad</button>
-            <button class="choice">Library</button>
-        </div>
+        <div id="choices"></div>
         <div id="game-over" style="display: none;">
             <p>Game Over!</p>
             <button id="restart-button">Restart</button>
         </div>
         <button id="back-button-game">Back to Menu</button>
     </div>
-    <div id="instructions" style="display: none;">
-        <h2>Instructions</h2>
-        <p>Guess the word from the emojis shown. Select the correct answer from the options provided.</p>
-        <button id="back-button">Back to Menu</button>
+    <div id="flags-container" style="display: none;">
+        <div id="timer-bar-flags"></div>
+        <div id="level-flags">🔥 Streak <span id="current-level-flags">1</span></div>
+        <img id="flag-image" src="" alt="Flag">
+        <div id="choices-flags"></div>
+        <div id="game-over-flags" style="display: none;">
+            <p>Game Over!</p>
+            <button id="restart-button-flags">Restart</button>
+        </div>
+        <button id="back-button-flags">Back to Menu</button>
     </div>
     <div id="movies-container" style="display: none;">
         <div id="timer-bar-movies"></div>
