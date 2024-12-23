@@ -1,3 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Quicksand', sans-serif;
+}
+
+button, .choice, .choice-flag, #submit-movie-answer, #restart-button, #restart-button-flags, #restart-button-movies, #back-button-game, #back-button-flags, #back-button-movies {
+    font-family: 'Quicksand', sans-serif;
+}
+
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -306,3 +316,52 @@ button:active {
         font-size: 18px;
     }
 }
+
+.snowflake, .snowball {
+    position: fixed;
+    top: -10px;
+    z-index: 1;
+    user-select: none;
+    pointer-events: none;
+    color: white;
+    font-size: 1em;
+    will-change: transform;
+    animation: fall linear infinite;
+  }
+  
+  .snowball {
+    background-color: white;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+  
+  @keyframes fall {
+    to {
+      transform: translateY(100vh);
+    }
+  }
+  
+  #toggle-snow-button {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10000;
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .logo, .flag, .emoji, .button {
+    z-index: 10000;
+    position: relative;
+  }
