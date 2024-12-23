@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess the Word from Emojis</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+        }
+    </style>
 </head>
 <body>
     <div id="main-menu">
@@ -13,6 +19,7 @@
             <button id="start-button">🎮 Words</button>
             <button id="flags-button">🏳️ Flags</button>
             <button id="movies-button">🎬 Movies</button>
+            <button id="christmas-button">🎄 Christmas</button>
         </div>
     </div>
     <div id="game-container" style="display: none;">
@@ -23,7 +30,7 @@
         </div>
         <div id="choices"></div>
         <div id="game-over" style="display: none;">
-            <p>Game Over!</p>
+            <p id="game-over-message">Game Over!</p>
             <button id="restart-button">Restart</button>
         </div>
         <button id="back-button-game">Back to Menu</button>
@@ -33,8 +40,9 @@
         <div id="level-flags">🔥 Streak <span id="current-level-flags">1</span></div>
         <img id="flag-image" src="" alt="Flag">
         <div id="choices-flags"></div>
+        <div id="loading-flags" style="display: none;">Loading flags...</div>
         <div id="game-over-flags" style="display: none;">
-            <p>Game Over!</p>
+            <p id="game-over-flags-message">Game Over!</p>
             <button id="restart-button-flags">Restart</button>
         </div>
         <button id="back-button-flags">Back to Menu</button>
@@ -48,7 +56,7 @@
         <input type="text" id="movie-answer-input" placeholder="Type your answer here...">
         <button id="submit-movie-answer">Submit</button>
         <div id="game-over-movies" style="display: none;">
-            <p>Game Over!</p>
+            <p id="game-over-movies-message">Game Over!</p>
             <button id="restart-button-movies">Restart</button>
         </div>
         <button id="back-button-movies">Back to Menu</button>
