@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess the Word from Emojis</title>
+    <title>Guess the Emoji Game</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Quicksand', sans-serif;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
     <div id="main-menu">
@@ -20,6 +18,7 @@
             <button id="flags-button">🏳️ Flags</button>
             <button id="movies-button">🎬 Movies</button>
             <button id="christmas-button">🎄 Christmas</button>
+            <button id="leaderboard-button">🏆 Leaderboard</button> <!-- Leaderboard button -->
         </div>
     </div>
     <div id="game-container" style="display: none;">
@@ -60,6 +59,20 @@
             <button id="restart-button-movies">Restart</button>
         </div>
         <button id="back-button-movies">Back to Menu</button>
+    </div>
+    <div id="leaderboard-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" id="leaderboard-close-button">&times;</span>
+            <h2>Leaderboard</h2>
+            <ul id="leaderboard-list"></ul>
+            <div id="name-input-container" style="display: true;">
+                <p>Do you want to be on the leaderboard? Enter your name:</p>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <input type="text" id="username-input" placeholder="Enter your name (we will save it for later)">
+                    <button id="submit-name">Submit</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
