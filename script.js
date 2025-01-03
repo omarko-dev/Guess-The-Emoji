@@ -1,3 +1,121 @@
+const firebaseConfig = {
+    apiKey: "AIzaSyAiIrOvbuXw_eFo3H9l7s4QULqrPSqOPFU",
+    authDomain: "guess-the-song-dd37a.firebaseapp.com",
+    databaseURL: "https://guess-the-song-dd37a-default-rtdb.firebaseio.com",
+    projectId: "guess-the-song-dd37a",
+    storageBucket: "guess-the-song-dd37a.appspot.com",
+    messagingSenderId: "672368690487",
+    appId: "1:672368690487:web:367ad06d5acebb73d2c6b2",
+    measurementId: "G-4KRYL8QZ15"
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+let playerName = localStorage.getItem('playerName') || '';
+
+function saveScore(username, score) {
+    const leaderboardRef = database.ref('leaderboard');
+    leaderboardRef.orderByChild('username').equalTo(username).once('value', snapshot => {
+        if (snapshot.exists()) {
+            const userData = snapshot.val();
+            const userKey = Object.keys(userData)[0];
+            const userScore = userData[userKey].score;
+            if (score > userScore) {
+                leaderboardRef.child(userKey).update({ score: score });
+            }
+        } else {
+            const newScoreRef = leaderboardRef.push();
+            newScoreRef.set({
+                username: username,
+                score: score
+            });
+        }
+    });
+}
+
+// Retrieve leaderboard data
+function getLeaderboard(callback) {
+    const leaderboardRef = database.ref('leaderboard').orderByChild('score').limitToLast(10);
+    leaderboardRef.once('value', snapshot => {
+        const leaderboard = [];
+        snapshot.forEach(childSnapshot => {
+            leaderboard.push(childSnapshot.val());
+        });
+        callback(leaderboard.reverse());
+    });
+}
+
+document.getElementById('leaderboard-button').addEventListener('click', () => {
+    if (!playerName) {
+        document.getElementById('name-input-container').style.display = 'flex';
+    }
+    getLeaderboard(displayLeaderboard);
+});
+
+document.getElementById('submit-name').addEventListener('click', () => {
+    const username = document.getElementById('username-input').value;
+    if (username) {
+        playerName = username;
+        localStorage.setItem('playerName', playerName);
+        document.getElementById('name-input-container').style.display = 'none';
+        getLeaderboard(displayLeaderboard);
+    }
+});
+
+function displayLeaderboard(leaderboard) {
+    const leaderboardList = document.getElementById('leaderboard-list');
+    leaderboardList.innerHTML = '';
+    leaderboard.forEach((entry, index) => {
+        const listItem = document.createElement('li');
+        let medal = '';
+        if (index === 0) {
+            medal = '🥇';
+        } else if (index === 1) {
+            medal = '🥈';
+        } else if (index === 2) {
+            medal = '🥉';
+        }
+        listItem.textContent = `${index + 1}. ${medal} ${entry.username}: ${entry.score}`;
+        leaderboardList.appendChild(listItem);
+    });
+    document.getElementById('leaderboard-modal').style.display = 'block';
+}
+
+document.getElementById('leaderboard-close-button').addEventListener('click', () => {
+    document.getElementById('leaderboard-modal').style.display = 'none';
+});
+
+window.addEventListener('click', (event) => {
+    if (event.target === document.getElementById('leaderboard-modal')) {
+        document.getElementById('leaderboard-modal').style.display = 'none';
+    }
+});
+
+function startTimer(timerElement, initialTime) {
+    countdown = setInterval(() => {
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            gameOver(timerElement === timerBar ? levels : timerElement === timerBarFlags ? flagLevels : timerElement === timerBarMovies ? movieLevels : christmasLevels, currentLevel);
+        } else {
+            timeLeft--;
+            timerElement.style.width = (timeLeft / initialTime) * 100 + '%';
+        }
+    }, 1000);
+}
+
+document.getElementById('submit-name').addEventListener('click', () => {
+    const username = document.getElementById('username-input').value;
+    if (username) {
+        playerName = username;
+        localStorage.setItem('playerName', playerName);
+        saveScore(playerName, streak);
+        document.getElementById('name-input-container').style.display = 'none';
+        document.getElementById('game-over-message').style.display = 'none';
+        document.getElementById('restart-game').style.display = 'block';
+    }
+});
+
 const levels = [
     { emojis: ['🧠', '💡'], answer: 'Brainstorm', choices: ['Idea', 'Brainstorm', 'Thinking', 'Creativity'] },
     { emojis: ['🌍', '✈️'], answer: 'World Travel', choices: ['Journey', 'Vacation', 'World Travel', 'Adventure'] },
